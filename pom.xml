@@ -50,7 +50,7 @@
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
             <version>24.0.1</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
@@ -77,6 +77,22 @@
                         </goals>
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <relocations>
+                                <relocation>
+                                    <pattern>org.jetbrains.annotations</pattern>
+                                    <shadedPattern>com.kalix.motd.libs.annotations</shadedPattern>
+                                </relocation>
+                            </relocations>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
                         </configuration>
                     </execution>
                 </executions>
