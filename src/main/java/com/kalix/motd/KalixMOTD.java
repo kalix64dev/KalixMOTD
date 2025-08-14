@@ -96,33 +96,61 @@ public class KalixMOTD extends JavaPlugin {
             logger.warn("Vault bulunamadı! Vault desteği devre dışı.");
         }
         
-        // BungeeCord kontrolü
+        // Sunucu türünü otomatik tespit et
+        detectServerType();
+        
+        // Proxy kontrolü (sadece BungeeCord ve Velocity)
         if (Bukkit.getPluginManager().getPlugin("BungeeCord") != null) {
             bungeeCord = true;
-            logger.info("BungeeCord bulundu ve etkinleştirildi!");
+            logger.info("BungeeCord proxy bulundu ve etkinleştirildi!");
         } else {
-            logger.warn("BungeeCord bulunamadı! BungeeCord desteği devre dışı.");
+            logger.info("BungeeCord proxy bulunamadı.");
         }
         
-        // Velocity kontrolü
         if (Bukkit.getPluginManager().getPlugin("Velocity") != null) {
             velocity = true;
-            logger.info("Velocity bulundu ve etkinleştirildi!");
+            logger.info("Velocity proxy bulundu ve etkinleştirildi!");
         } else {
-            logger.warn("Velocity bulunamadı! Velocity desteği devre dışı.");
+            logger.info("Velocity proxy bulunamadı.");
         }
+        
+        // ProxyUtils'i başlat
+        ProxyUtils.setPlugin(this);
+    }
+    
+    /**
+     * Sunucu türünü otomatik tespit eder
+     */
+    private void detectServerType() {
+        String serverName = Bukkit.getName();
+        String serverVersion = Bukkit.getVersion();
+        
+        logger.info("Sunucu türü tespit ediliyor...");
+        logger.info("Sunucu adı: " + serverName);
+        logger.info("Sunucu versiyonu: " + serverVersion);
         
         // Folia kontrolü
         try {
             Class.forName("io.papermc.paper.threadedregions.RegionizedServer");
             folia = true;
-            logger.info("Folia bulundu ve etkinleştirildi!");
+            logger.info("Folia (PaperMC fork) tespit edildi!");
         } catch (ClassNotFoundException e) {
-            logger.warn("Folia bulunamadı! Folia desteği devre dışı.");
+            folia = false;
+            logger.info("Folia tespit edilmedi, standart sunucu yazılımı kullanılıyor.");
         }
         
-        // ProxyUtils'i başlat
-        ProxyUtils.setPlugin(this);
+        // Sunucu türü bilgilerini logla
+        if (folia) {
+            logger.info("Sunucu türü: Folia (PaperMC'nin geliştirdiği fork)");
+        } else if (serverName.toLowerCase().contains("paper")) {
+            logger.info("Sunucu türü: Paper");
+        } else if (serverName.toLowerCase().contains("spigot")) {
+            logger.info("Sunucu türü: Spigot");
+        } else if (serverName.toLowerCase().contains("bukkit")) {
+            logger.info("Sunucu türü: Bukkit");
+        } else {
+            logger.info("Sunucu türü: Bilinmeyen (" + serverName + ")");
+        }
     }
     
     /**

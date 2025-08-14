@@ -20,7 +20,8 @@ Ultra profesyonel MOTD (Message of the Day) plugin for Minecraft 1.8-1.21
 ### 🔧 Teknik Özellikler
 - **PlaceholderAPI Entegrasyonu**: Tüm PlaceholderAPI placeholder'ları
 - **Vault Entegrasyonu**: Ekonomi, izin ve chat desteği
-- **Proxy Desteği**: BungeeCord, Velocity ve Folia desteği
+- **Proxy Desteği**: BungeeCord ve Velocity desteği
+- **Folia Desteği**: PaperMC'nin geliştirdiği fork desteği
 - **Async İşlemler**: Performans için asenkron işlemler
 - **Cache Sistemi**: Hızlı erişim için cache
 - **Debug Modu**: Geliştirici dostu debug sistemi
@@ -36,7 +37,7 @@ Ultra profesyonel MOTD (Message of the Day) plugin for Minecraft 1.8-1.21
 
 ### Gereksinimler
 - **Minecraft**: 1.8 - 1.21
-- **Server Software**: Spigot, Paper, Bukkit, Folia
+- **Server Software**: Spigot, Paper, Bukkit, Folia (PaperMC fork)
 - **Java**: Java 8 veya üzeri
 - **Opsiyonel**: PlaceholderAPI, Vault, BungeeCord, Velocity
 
@@ -193,7 +194,10 @@ advanced:
   proxy:
     bungeecord: true
     velocity: true
-    folia: true
+
+# Folia desteği (PaperMC fork)
+advanced:
+  folia: true
 ```
 
 ### Protokol Ayarları

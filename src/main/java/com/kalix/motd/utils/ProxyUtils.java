@@ -145,11 +145,11 @@ public class ProxyUtils {
         }
         
         try {
-            // Folia ayarlarını yap
-            plugin.getPluginLogger().info("Folia desteği etkinleştirildi!");
+            // Folia (PaperMC fork) ayarlarını yap
+            plugin.getPluginLogger().info("Folia (PaperMC fork) desteği etkinleştirildi!");
             
             // Folia için özel ayarlar burada yapılabilir
-            // Örneğin: regionized server ayarları
+            // Örneğin: regionized server ayarları, async event handling
             
         } catch (Exception e) {
             plugin.getPluginLogger().error("Folia ayarları yapılırken hata: " + e.getMessage());
@@ -189,14 +189,35 @@ public class ProxyUtils {
     }
     
     /**
+     * Sunucu türünü döndürür
+     */
+    public static String getServerType() {
+        if (isFoliaEnabled()) {
+            return "Folia (PaperMC fork)";
+        } else {
+            String serverName = plugin.getServer().getName();
+            if (serverName.toLowerCase().contains("paper")) {
+                return "Paper";
+            } else if (serverName.toLowerCase().contains("spigot")) {
+                return "Spigot";
+            } else if (serverName.toLowerCase().contains("bukkit")) {
+                return "Bukkit";
+            } else {
+                return serverName;
+            }
+        }
+    }
+    
+    /**
      * Proxy bilgilerini döndürür
      */
     public static String getProxyInfo() {
         StringBuilder info = new StringBuilder();
+        info.append("Sunucu Türü: ").append(getServerType()).append("\n");
         info.append("Proxy Türü: ").append(getProxyType()).append("\n");
         info.append("BungeeCord: ").append(isBungeeCordEnabled() ? "Aktif" : "Pasif").append("\n");
         info.append("Velocity: ").append(isVelocityEnabled() ? "Aktif" : "Pasif").append("\n");
-        info.append("Folia: ").append(isFoliaEnabled() ? "Aktif" : "Pasif");
+        info.append("Folia: ").append(isFoliaEnabled() ? "Aktif (PaperMC fork)" : "Pasif");
         
         return info.toString();
     }

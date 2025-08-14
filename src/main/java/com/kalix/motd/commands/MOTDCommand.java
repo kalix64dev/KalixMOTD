@@ -1,6 +1,7 @@
 package com.kalix.motd.commands;
 
 import com.kalix.motd.KalixMOTD;
+import com.kalix.motd.utils.ProxyUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -183,8 +184,9 @@ public class MOTDCommand implements CommandExecutor, TabCompleter {
         
         for (String message : infoMessages) {
             message = message.replace("{version}", plugin.getDescription().getVersion());
+            message = message.replace("{server_type}", ProxyUtils.getServerType());
             message = message.replace("{proxy}", (plugin.isBungeeCordEnabled() || plugin.isVelocityEnabled()) ? "§aAktif" : "§cPasif");
-            message = message.replace("{folia}", plugin.isFoliaEnabled() ? "§aAktif" : "§cPasif");
+            message = message.replace("{folia}", plugin.isFoliaEnabled() ? "§aAktif (PaperMC fork)" : "§cPasif");
             message = message.replace("{papi}", plugin.isPlaceholderAPIEnabled() ? "§aAktif" : "§cPasif");
             message = message.replace("{vault}", plugin.isVaultEnabled() ? "§aAktif" : "§cPasif");
             sender.sendMessage(prefix + message);

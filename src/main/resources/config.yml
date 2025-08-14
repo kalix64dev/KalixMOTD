@@ -13,7 +13,7 @@ settings:
   vault-support: true
   # Proxy desteği (BungeeCord/Velocity)
   proxy-support: true
-  # Folia desteği
+  # Folia desteği (PaperMC fork)
   folia-support: true
 
 # MOTD ayarları
@@ -116,6 +116,7 @@ messages:
     - "§7Yazar: §aKalix"
     - "§7Desteklenen sürümler: §a1.8-1.21"
     - "§7API Sürümü: §a1.13"
+    - "§7Sunucu Türü: §a{server_type}"
     - "§7Proxy Desteği: §a{proxy}"
     - "§7Folia Desteği: §a{folia}"
     - "§7PlaceholderAPI: §a{papi}"
@@ -169,7 +170,9 @@ advanced:
   proxy:
     bungeecord: true
     velocity: true
-    folia: true
+  
+  # Folia desteği (PaperMC fork)
+  folia: true
   
   # Protokol ayarları
   protocol:
