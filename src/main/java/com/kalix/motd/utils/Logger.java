@@ -29,18 +29,23 @@ public class Logger {
         this.bukkitLogger = plugin.getLogger();
         this.dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         
-        setupFileLogger();
+        // ConfigManager henüz hazır olmayabilir, setupFileLogger'ı daha sonra çağır
     }
     
     /**
      * Dosya logger'ını kurar
      */
-    private void setupFileLogger() {
-        if (!plugin.getConfigManager().getBoolean("logging.enabled", true)) {
-            return;
-        }
-        
+    public void setupFileLogger() {
         try {
+            // ConfigManager null kontrolü
+            if (plugin.getConfigManager() == null) {
+                return;
+            }
+            
+            if (!plugin.getConfigManager().getBoolean("logging.enabled", true)) {
+                return;
+            }
+            
             String logFile = plugin.getConfigManager().getString("logging.file", "logs/kalixmotd.log");
             File logDir = new File(plugin.getDataFolder(), "logs");
             
@@ -54,6 +59,8 @@ public class Logger {
             
         } catch (IOException e) {
             bukkitLogger.warning("Log dosyası oluşturulamadı: " + e.getMessage());
+        } catch (Exception e) {
+            bukkitLogger.warning("Logger kurulumunda hata: " + e.getMessage());
         }
     }
     
@@ -82,8 +89,12 @@ public class Logger {
      * Debug mesajı loglar
      */
     public void debug(String message) {
-        if (plugin.getConfigManager().isDebugEnabled()) {
-            log(Level.INFO, "[DEBUG] " + message);
+        try {
+            if (plugin.getConfigManager() != null && plugin.getConfigManager().isDebugEnabled()) {
+                log(Level.INFO, "[DEBUG] " + message);
+            }
+        } catch (Exception e) {
+            // ConfigManager henüz hazır değilse debug mesajını gösterme
         }
     }
     
@@ -110,15 +121,20 @@ public class Logger {
     public void logException(String message, Exception e) {
         error(message + ": " + e.getMessage());
         
-        if (plugin.getConfigManager().isDebugEnabled()) {
-            e.printStackTrace();
-            
-            // Stack trace'i dosyaya yaz
-            if (printWriter != null) {
-                printWriter.println("Stack trace:");
-                e.printStackTrace(printWriter);
-                printWriter.flush();
+        try {
+            if (plugin.getConfigManager() != null && plugin.getConfigManager().isDebugEnabled()) {
+                e.printStackTrace();
+                
+                // Stack trace'i dosyaya yaz
+                if (printWriter != null) {
+                    printWriter.println("Stack trace:");
+                    e.printStackTrace(printWriter);
+                    printWriter.flush();
+                }
             }
+        } catch (Exception ex) {
+            // ConfigManager henüz hazır değilse sadece console'a yazdır
+            e.printStackTrace();
         }
     }
     

@@ -35,13 +35,16 @@ public class KalixMOTD extends JavaPlugin {
     public void onEnable() {
         instance = this;
         
-        // Logger başlatma
+        // Logger başlatma (ConfigManager'dan önce)
         logger = new Logger(this);
         logger.info("KalixMOTD başlatılıyor...");
         
         // Config yöneticisi başlatma
         configManager = new ConfigManager(this);
         configManager.loadConfig();
+        
+        // Logger'ı tam olarak başlat (ConfigManager hazır olduktan sonra)
+        logger.setupFileLogger();
         
         // MOTD yöneticisi başlatma
         motdManager = new MOTDManager(this);
@@ -71,7 +74,9 @@ public class KalixMOTD extends JavaPlugin {
     
     @Override
     public void onDisable() {
-        logger.info("KalixMOTD devre dışı bırakılıyor...");
+        if (logger != null) {
+            logger.info("KalixMOTD devre dışı bırakılıyor...");
+        }
         
         // MOTD yöneticisini temizle
         if (motdManager != null) {
@@ -83,7 +88,9 @@ public class KalixMOTD extends JavaPlugin {
             rateLimitManager.cleanup();
         }
         
-        logger.info("KalixMOTD başarıyla devre dışı bırakıldı!");
+        if (logger != null) {
+            logger.info("KalixMOTD başarıyla devre dışı bırakıldı!");
+        }
     }
     
     /**
