@@ -1,0 +1,32 @@
+name: KalixMOTD
+version: '${project.version}'
+main: com.kalix.motd.KalixMOTD
+api-version: '1.13'
+authors: [Kalix]
+description: Ultra profesyonel MOTD plugin for Minecraft 1.8-1.21
+website: https://github.com/kalix/KalixMOTD
+softdepend: [PlaceholderAPI, Vault]
+commands:
+  motd:
+    description: Ana MOTD komutu
+    usage: /motd <reload|set|list|info>
+    permission: kalixmotd.admin
+    permission-message: §cBu komutu kullanmak için yetkiniz yok!
+  motdset:
+    description: MOTD ayarlama komutu
+    usage: /motdset <line1|line2> <message>
+    permission: kalixmotd.admin
+    permission-message: §cBu komutu kullanmak için yetkiniz yok!
+permissions:
+  kalixmotd.admin:
+    description: KalixMOTD admin yetkisi
+    default: op
+  kalixmotd.reload:
+    description: Plugin'i yeniden yükleme yetkisi
+    default: op
+  kalixmotd.set:
+    description: MOTD ayarlama yetkisi
+    default: op
+  kalixmotd.info:
+    description: Plugin bilgilerini görme yetkisi
+    default: true
