@@ -1,3 +1,4 @@
+com/kalix/motd/managers/RateLimitManager$RateLimitEntry.class
 com/kalix/motd/managers/MOTDManager$1.class
 com/kalix/motd/commands/MOTDSetCommand.class
 com/kalix/motd/managers/ConfigManager.class
@@ -9,5 +10,6 @@ com/kalix/motd/utils/ColorUtils.class
 com/kalix/motd/KalixMOTD.class
 com/kalix/motd/utils/Logger.class
 com/kalix/motd/listeners/ServerListPingListener.class
+com/kalix/motd/managers/RateLimitManager.class
 com/kalix/motd/managers/MOTDManager.class
 com/kalix/motd/utils/ProxyUtils.class

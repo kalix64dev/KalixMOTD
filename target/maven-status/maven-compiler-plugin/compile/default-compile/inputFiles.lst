@@ -1,3 +1,4 @@
+/workspace/src/main/java/com/kalix/motd/managers/RateLimitManager.java
 /workspace/src/main/java/com/kalix/motd/commands/MOTDCommand.java
 /workspace/src/main/java/com/kalix/motd/utils/VersionUtils.java
 /workspace/src/main/java/com/kalix/motd/utils/ColorUtils.java

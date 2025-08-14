@@ -30,6 +30,28 @@ public class ServerListPingListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onServerListPing(ServerListPingEvent event) {
         try {
+            // IP adresini al
+            String clientIP = getClientIP(event);
+            
+            // Rate limit kontrolü
+            if (plugin.getRateLimitManager().isRateLimited(clientIP)) {
+                if (plugin.getRateLimitManager().shouldSendEmptyResponse()) {
+                    // Boş yanıt gönder
+                    event.setMotd("");
+                    event.setMaxPlayers(0);
+                    try {
+                        event.getClass().getMethod("setNumPlayers", int.class).invoke(event, 0);
+                    } catch (Exception e) {
+                        // Fallback
+                    }
+                    
+                    if (plugin.getConfigManager().isDebugEnabled()) {
+                        plugin.getPluginLogger().debug("Rate limit aşıldı, boş yanıt gönderildi: " + clientIP);
+                    }
+                    return;
+                }
+            }
+            
             // MOTD'yi ayarla
             setMOTD(event);
             
@@ -289,5 +311,53 @@ public class ServerListPingListener implements Listener {
                 plugin.getPluginLogger().debug("Sunucu türü ayarları yapılırken hata: " + e.getMessage());
             }
         }
+    }
+    
+    /**
+     * Client IP adresini alır
+     */
+    private String getClientIP(ServerListPingEvent event) {
+        try {
+            // Reflection ile IP adresini almaya çalış
+            Class<?> eventClass = event.getClass();
+            
+            // getAddress metodu varsa kullan
+            try {
+                Method getAddressMethod = eventClass.getMethod("getAddress");
+                Object address = getAddressMethod.invoke(event);
+                if (address != null) {
+                    return address.toString();
+                }
+            } catch (NoSuchMethodException e) {
+                // Fallback - field ile al
+                try {
+                    Field addressField = eventClass.getDeclaredField("address");
+                    addressField.setAccessible(true);
+                    Object address = addressField.get(event);
+                    if (address != null) {
+                        return address.toString();
+                    }
+                } catch (Exception ex) {
+                    // Fallback - client field
+                    try {
+                        Field clientField = eventClass.getDeclaredField("client");
+                        clientField.setAccessible(true);
+                        Object client = clientField.get(event);
+                        if (client != null) {
+                            return client.toString();
+                        }
+                    } catch (Exception exc) {
+                        // Son fallback
+                    }
+                }
+            }
+        } catch (Exception e) {
+            if (plugin.getConfigManager().isDebugEnabled()) {
+                plugin.getPluginLogger().debug("IP adresi alınamadı: " + e.getMessage());
+            }
+        }
+        
+        // Varsayılan IP
+        return "unknown";
     }
 }

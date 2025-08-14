@@ -168,7 +168,7 @@ advanced:
   
   # Proxy desteği
   proxy:
-    bungeecord: true
+    bungeeCord: true
     velocity: true
   
   # Folia desteği (PaperMC fork)
@@ -179,6 +179,15 @@ advanced:
     custom-protocol: false
     protocol-number: -1
     custom-protocol-number: 47
+  
+  # Rate limiting ayarları
+  rate-limit:
+    enabled: true
+    requests-per-window: 5
+    window-seconds: 5
+    block-duration-seconds: 30
+    empty-response-on-limit: true
+    log-violations: true
 
 # Log ayarları
 logging:

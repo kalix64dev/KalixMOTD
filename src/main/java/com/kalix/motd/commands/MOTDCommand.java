@@ -20,7 +20,7 @@ import java.util.List;
 public class MOTDCommand implements CommandExecutor, TabCompleter {
     
     private final KalixMOTD plugin;
-    private final List<String> subCommands = Arrays.asList("reload", "set", "list", "info", "help");
+    private final List<String> subCommands = Arrays.asList("reload", "set", "list", "info", "ratelimit", "rl", "help");
     
     public MOTDCommand(KalixMOTD plugin) {
         this.plugin = plugin;
@@ -47,6 +47,9 @@ public class MOTDCommand implements CommandExecutor, TabCompleter {
                 return handleList(sender, prefix);
             case "info":
                 return handleInfo(sender, prefix);
+            case "ratelimit":
+            case "rl":
+                return handleRateLimit(sender, args, prefix);
             case "help":
                 showHelp(sender, prefix);
                 return true;
@@ -196,6 +199,59 @@ public class MOTDCommand implements CommandExecutor, TabCompleter {
     }
     
     /**
+     * Rate limit komutunu işler
+     */
+    private boolean handleRateLimit(CommandSender sender, String[] args, String prefix) {
+        if (!sender.hasPermission("kalixmotd.admin")) {
+            sender.sendMessage(prefix + plugin.getConfigManager().getString("messages.no-permission", 
+                "§cBu işlem için yetkiniz yok!"));
+            return true;
+        }
+        
+        if (args.length < 2) {
+            sender.sendMessage(prefix + "§6§lRate Limit Komutları:");
+            sender.sendMessage(prefix + "§7/motd ratelimit stats §8- §fİstatistikleri göster");
+            sender.sendMessage(prefix + "§7/motd ratelimit reset <ip> §8- §fIP'nin rate limit'ini sıfırla");
+            sender.sendMessage(prefix + "§7/motd ratelimit resetall §8- §fTüm rate limit'leri sıfırla");
+            return true;
+        }
+        
+        String subCommand = args[1].toLowerCase();
+        
+        switch (subCommand) {
+            case "stats":
+                sender.sendMessage(prefix + "§6§lRate Limit İstatistikleri:");
+                sender.sendMessage(prefix + "§7" + plugin.getRateLimitManager().getStats());
+                sender.sendMessage(prefix + "§7Durum: " + (plugin.getRateLimitManager().isEnabled() ? "§aAktif" : "§cPasif"));
+                sender.sendMessage(prefix + "§7Limit: " + plugin.getConfigManager().getInt("advanced.rate-limit.requests-per-window", 5) + 
+                    " istek/" + plugin.getConfigManager().getInt("advanced.rate-limit.window-seconds", 5) + "s");
+                sender.sendMessage(prefix + "§7Blok Süresi: " + plugin.getConfigManager().getInt("advanced.rate-limit.block-duration-seconds", 30) + "s");
+                break;
+                
+            case "reset":
+                if (args.length < 3) {
+                    sender.sendMessage(prefix + "§cKullanım: /motd ratelimit reset <ip>");
+                    return true;
+                }
+                String ip = args[2];
+                plugin.getRateLimitManager().resetRateLimit(ip);
+                sender.sendMessage(prefix + "§aRate limit sıfırlandı: " + ip);
+                break;
+                
+            case "resetall":
+                plugin.getRateLimitManager().resetAllRateLimits();
+                sender.sendMessage(prefix + "§aTüm rate limit durumları sıfırlandı!");
+                break;
+                
+            default:
+                sender.sendMessage(prefix + "§cGeçersiz alt komut! Kullanım: stats, reset, resetall");
+                break;
+        }
+        
+        return true;
+    }
+    
+    /**
      * Yardım mesajını gösterir
      */
     private void showHelp(CommandSender sender, String prefix) {
@@ -204,6 +260,7 @@ public class MOTDCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage(prefix + "§7/motd set <line1|line2> <message> §8- §fMOTD ayarla");
         sender.sendMessage(prefix + "§7/motd list §8- §fMOTD ayarlarını listele");
         sender.sendMessage(prefix + "§7/motd info §8- §fPlugin bilgilerini göster");
+        sender.sendMessage(prefix + "§7/motd ratelimit §8- §fRate limit yönetimi");
         sender.sendMessage(prefix + "§7/motd help §8- §fBu yardım mesajını göster");
     }
     
@@ -222,6 +279,11 @@ public class MOTDCommand implements CommandExecutor, TabCompleter {
             // Set komutu için line1/line2 öner
             completions.add("line1");
             completions.add("line2");
+        } else if (args.length == 2 && (args[0].equalsIgnoreCase("ratelimit") || args[0].equalsIgnoreCase("rl"))) {
+            // Rate limit komutları için alt komutları öner
+            completions.add("stats");
+            completions.add("reset");
+            completions.add("resetall");
         }
         
         return completions;

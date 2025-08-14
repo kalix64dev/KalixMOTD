@@ -5,6 +5,7 @@ import com.kalix.motd.commands.MOTDSetCommand;
 import com.kalix.motd.listeners.ServerListPingListener;
 import com.kalix.motd.managers.ConfigManager;
 import com.kalix.motd.managers.MOTDManager;
+import com.kalix.motd.managers.RateLimitManager;
 import com.kalix.motd.utils.Logger;
 import com.kalix.motd.utils.ProxyUtils;
 import com.kalix.motd.utils.VersionUtils;
@@ -22,6 +23,7 @@ public class KalixMOTD extends JavaPlugin {
     private static KalixMOTD instance;
     private ConfigManager configManager;
     private MOTDManager motdManager;
+    private RateLimitManager rateLimitManager;
     private Logger logger;
     private boolean placeholderAPI = false;
     private boolean vault = false;
@@ -43,6 +45,9 @@ public class KalixMOTD extends JavaPlugin {
         
         // MOTD yöneticisi başlatma
         motdManager = new MOTDManager(this);
+        
+        // Rate limit yöneticisi başlatma
+        rateLimitManager = new RateLimitManager(this);
         
         // Plugin bağımlılıklarını kontrol et
         checkDependencies();
@@ -71,6 +76,11 @@ public class KalixMOTD extends JavaPlugin {
         // MOTD yöneticisini temizle
         if (motdManager != null) {
             motdManager.cleanup();
+        }
+        
+        // Rate limit yöneticisini temizle
+        if (rateLimitManager != null) {
+            rateLimitManager.cleanup();
         }
         
         logger.info("KalixMOTD başarıyla devre dışı bırakıldı!");
@@ -217,6 +227,15 @@ public class KalixMOTD extends JavaPlugin {
      */
     public MOTDManager getMOTDManager() {
         return motdManager;
+    }
+    
+    /**
+     * Rate limit yöneticisini döndürür
+     * 
+     * @return Rate limit yöneticisi
+     */
+    public RateLimitManager getRateLimitManager() {
+        return rateLimitManager;
     }
     
     /**
