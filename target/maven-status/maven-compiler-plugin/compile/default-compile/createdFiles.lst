@@ -10,3 +10,4 @@ com/kalix/motd/KalixMOTD.class
 com/kalix/motd/utils/Logger.class
 com/kalix/motd/listeners/ServerListPingListener.class
 com/kalix/motd/managers/MOTDManager.class
+com/kalix/motd/utils/ProxyUtils.class

@@ -11,6 +11,10 @@ settings:
   placeholderapi-support: true
   # Vault desteği
   vault-support: true
+  # Proxy desteği (BungeeCord/Velocity)
+  proxy-support: true
+  # Folia desteği
+  folia-support: true
 
 # MOTD ayarları
 motd:
@@ -54,16 +58,40 @@ server-list:
     format: "§a{online}§7/§c{max}"
     fake-online: false
     fake-max: false
+    fake-online-value: 0
+    fake-max-value: 100
   
   # Sunucu ikonu
   icon:
     enabled: true
     path: "server-icon.png"
+    auto-generate: true
   
   # Sunucu açıklaması
   description:
     enabled: true
     format: "§6§lKalixMOTD\n§7Ultra profesyonel MOTD plugin"
+  
+  # Protokol ayarları
+  protocol:
+    enabled: true
+    name: "§6KalixMOTD §8» §f{version}"
+    version: "1.8-1.21"
+    custom-version: false
+    custom-version-value: "1.21.1"
+  
+  # Sunucu türü ayarları
+  server-type:
+    enabled: true
+    name: "§6KalixMOTD"
+    description: "Ultra profesyonel MOTD plugin"
+  
+  # Favicon ayarları
+  favicon:
+    enabled: true
+    path: "favicon.png"
+    auto-generate: true
+    size: 64
 
 # Özel mesajlar
 messages:
@@ -72,12 +100,26 @@ messages:
   set: "§aMOTD başarıyla güncellendi!"
   no-permission: "§cBu işlem için yetkiniz yok!"
   invalid-command: "§cGeçersiz komut! Kullanım: §f{usage}"
+  list:
+    - "§6§lMOTD Ayarları:"
+    - "§7Line 1: §f{line1}"
+    - "§7Line 2: §f{line2}"
+    - "§7Rastgele MOTD: §f{random}"
+    - "§7Hover: §f{hover}"
+    - "§7Click: §f{click}"
+    - "§7Protokol: §f{protocol}"
+    - "§7Oyuncu Sayısı: §f{player_count}"
+    - "§7Sunucu İkonu: §f{icon}"
   info:
     - "§6§lKalixMOTD Bilgileri"
     - "§7Sürüm: §a{version}"
     - "§7Yazar: §aKalix"
     - "§7Desteklenen sürümler: §a1.8-1.21"
     - "§7API Sürümü: §a1.13"
+    - "§7Proxy Desteği: §a{proxy}"
+    - "§7Folia Desteği: §a{folia}"
+    - "§7PlaceholderAPI: §a{papi}"
+    - "§7Vault: §a{vault}"
 
 # PlaceholderAPI entegrasyonu
 placeholders:
@@ -122,6 +164,18 @@ advanced:
   
   # Legacy renk desteği (1.8-1.15)
   legacy-support: true
+  
+  # Proxy desteği
+  proxy:
+    bungeecord: true
+    velocity: true
+    folia: true
+  
+  # Protokol ayarları
+  protocol:
+    custom-protocol: false
+    protocol-number: -1
+    custom-protocol-number: 47
 
 # Log ayarları
 logging:

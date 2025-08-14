@@ -6,6 +6,7 @@ import com.kalix.motd.listeners.ServerListPingListener;
 import com.kalix.motd.managers.ConfigManager;
 import com.kalix.motd.managers.MOTDManager;
 import com.kalix.motd.utils.Logger;
+import com.kalix.motd.utils.ProxyUtils;
 import com.kalix.motd.utils.VersionUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -24,6 +25,9 @@ public class KalixMOTD extends JavaPlugin {
     private Logger logger;
     private boolean placeholderAPI = false;
     private boolean vault = false;
+    private boolean bungeeCord = false;
+    private boolean velocity = false;
+    private boolean folia = false;
     
     @Override
     public void onEnable() {
@@ -43,6 +47,9 @@ public class KalixMOTD extends JavaPlugin {
         // Plugin bağımlılıklarını kontrol et
         checkDependencies();
         
+        // Proxy ayarlarını yap
+        setupProxy();
+        
         // Komutları kaydet
         registerCommands();
         
@@ -54,6 +61,7 @@ public class KalixMOTD extends JavaPlugin {
         
         logger.info("KalixMOTD başarıyla etkinleştirildi!");
         logger.info("Desteklenen sürümler: 1.8 - 1.21");
+        logger.info("Proxy desteği: " + ProxyUtils.getProxyType());
     }
     
     @Override
@@ -87,6 +95,41 @@ public class KalixMOTD extends JavaPlugin {
         } else {
             logger.warn("Vault bulunamadı! Vault desteği devre dışı.");
         }
+        
+        // BungeeCord kontrolü
+        if (Bukkit.getPluginManager().getPlugin("BungeeCord") != null) {
+            bungeeCord = true;
+            logger.info("BungeeCord bulundu ve etkinleştirildi!");
+        } else {
+            logger.warn("BungeeCord bulunamadı! BungeeCord desteği devre dışı.");
+        }
+        
+        // Velocity kontrolü
+        if (Bukkit.getPluginManager().getPlugin("Velocity") != null) {
+            velocity = true;
+            logger.info("Velocity bulundu ve etkinleştirildi!");
+        } else {
+            logger.warn("Velocity bulunamadı! Velocity desteği devre dışı.");
+        }
+        
+        // Folia kontrolü
+        try {
+            Class.forName("io.papermc.paper.threadedregions.RegionizedServer");
+            folia = true;
+            logger.info("Folia bulundu ve etkinleştirildi!");
+        } catch (ClassNotFoundException e) {
+            logger.warn("Folia bulunamadı! Folia desteği devre dışı.");
+        }
+        
+        // ProxyUtils'i başlat
+        ProxyUtils.setPlugin(this);
+    }
+    
+    /**
+     * Proxy ayarlarını yapar
+     */
+    private void setupProxy() {
+        ProxyUtils.setupProxy();
     }
     
     /**
@@ -173,6 +216,33 @@ public class KalixMOTD extends JavaPlugin {
      */
     public boolean isVaultEnabled() {
         return vault;
+    }
+    
+    /**
+     * BungeeCord'un mevcut olup olmadığını kontrol eder
+     * 
+     * @return BungeeCord mevcut mu
+     */
+    public boolean isBungeeCordEnabled() {
+        return bungeeCord;
+    }
+    
+    /**
+     * Velocity'un mevcut olup olmadığını kontrol eder
+     * 
+     * @return Velocity mevcut mu
+     */
+    public boolean isVelocityEnabled() {
+        return velocity;
+    }
+    
+    /**
+     * Folia'nın mevcut olup olmadığını kontrol eder
+     * 
+     * @return Folia mevcut mu
+     */
+    public boolean isFoliaEnabled() {
+        return folia;
     }
     
     /**

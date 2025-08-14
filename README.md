@@ -20,6 +20,7 @@ Ultra profesyonel MOTD (Message of the Day) plugin for Minecraft 1.8-1.21
 ### 🔧 Teknik Özellikler
 - **PlaceholderAPI Entegrasyonu**: Tüm PlaceholderAPI placeholder'ları
 - **Vault Entegrasyonu**: Ekonomi, izin ve chat desteği
+- **Proxy Desteği**: BungeeCord, Velocity ve Folia desteği
 - **Async İşlemler**: Performans için asenkron işlemler
 - **Cache Sistemi**: Hızlı erişim için cache
 - **Debug Modu**: Geliştirici dostu debug sistemi
@@ -28,14 +29,16 @@ Ultra profesyonel MOTD (Message of the Day) plugin for Minecraft 1.8-1.21
 - **Özelleştirilebilir Oyuncu Sayısı**: Sahte online/max oyuncu sayısı
 - **Sunucu İkonu**: Özel sunucu ikonu desteği
 - **Sunucu Açıklaması**: Özelleştirilebilir sunucu açıklaması
+- **Protokol Özelleştirme**: Protokol ismi ve versiyonu renklendirilebilir
+- **Sunucu Türü Ayarları**: Özelleştirilebilir sunucu türü bilgileri
 
 ## 📦 Kurulum
 
 ### Gereksinimler
 - **Minecraft**: 1.8 - 1.21
-- **Server Software**: Spigot, Paper, Bukkit
+- **Server Software**: Spigot, Paper, Bukkit, Folia
 - **Java**: Java 8 veya üzeri
-- **Opsiyonel**: PlaceholderAPI, Vault
+- **Opsiyonel**: PlaceholderAPI, Vault, BungeeCord, Velocity
 
 ### Kurulum Adımları
 1. Plugin dosyasını `plugins` klasörüne kopyalayın
@@ -179,6 +182,35 @@ settings:
   check-updates: true
   placeholderapi-support: true
   vault-support: true
+  proxy-support: true
+  folia-support: true
+```
+
+### Proxy Ayarları
+```yaml
+# BungeeCord/Velocity desteği
+advanced:
+  proxy:
+    bungeecord: true
+    velocity: true
+    folia: true
+```
+
+### Protokol Ayarları
+```yaml
+server-list:
+  protocol:
+    enabled: true
+    name: "§6KalixMOTD §8» §f{version}"
+    version: "1.8-1.21"
+    custom-version: false
+    custom-version-value: "1.21.1"
+
+advanced:
+  protocol:
+    custom-protocol: false
+    protocol-number: -1
+    custom-protocol-number: 47
 ```
 
 ### Log Ayarları

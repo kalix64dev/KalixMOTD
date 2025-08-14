@@ -129,12 +129,31 @@ public class MOTDCommand implements CommandExecutor, TabCompleter {
             return true;
         }
         
-        sender.sendMessage(prefix + "§6§lMOTD Ayarları:");
-        sender.sendMessage(prefix + "§7Line 1: §f" + plugin.getConfigManager().getString("motd.messages.line1", ""));
-        sender.sendMessage(prefix + "§7Line 2: §f" + plugin.getConfigManager().getString("motd.messages.line2", ""));
-        sender.sendMessage(prefix + "§7Rastgele MOTD: §f" + (plugin.getConfigManager().getBoolean("motd.random.enabled", true) ? "§aAçık" : "§cKapalı"));
-        sender.sendMessage(prefix + "§7Hover: §f" + (plugin.getConfigManager().getBoolean("motd.hover.enabled", true) ? "§aAçık" : "§cKapalı"));
-        sender.sendMessage(prefix + "§7Click: §f" + (plugin.getConfigManager().getBoolean("motd.click.enabled", true) ? "§aAçık" : "§cKapalı"));
+        List<String> listMessages = plugin.getConfigManager().getStringList("messages.list");
+        if (listMessages.isEmpty()) {
+            listMessages.add("§6§lMOTD Ayarları:");
+            listMessages.add("§7Line 1: §f{line1}");
+            listMessages.add("§7Line 2: §f{line2}");
+            listMessages.add("§7Rastgele MOTD: §f{random}");
+            listMessages.add("§7Hover: §f{hover}");
+            listMessages.add("§7Click: §f{click}");
+            listMessages.add("§7Protokol: §f{protocol}");
+            listMessages.add("§7Oyuncu Sayısı: §f{player_count}");
+            listMessages.add("§7Sunucu İkonu: §f{icon}");
+        }
+        
+        for (String message : listMessages) {
+            message = message.replace("{line1}", plugin.getConfigManager().getString("motd.messages.line1", ""));
+            message = message.replace("{line2}", plugin.getConfigManager().getString("motd.messages.line2", ""));
+            message = message.replace("{random}", plugin.getConfigManager().getBoolean("motd.random.enabled", true) ? "§aAçık" : "§cKapalı");
+            message = message.replace("{hover}", plugin.getConfigManager().getBoolean("motd.hover.enabled", true) ? "§aAçık" : "§cKapalı");
+            message = message.replace("{click}", plugin.getConfigManager().getBoolean("motd.click.enabled", true) ? "§aAçık" : "§cKapalı");
+            message = message.replace("{protocol}", plugin.getConfigManager().getBoolean("server-list.protocol.enabled", true) ? "§aAçık" : "§cKapalı");
+            message = message.replace("{player_count}", plugin.getConfigManager().getBoolean("server-list.player-count.enabled", true) ? "§aAçık" : "§cKapalı");
+            message = message.replace("{icon}", plugin.getConfigManager().getBoolean("server-list.icon.enabled", true) ? "§aAçık" : "§cKapalı");
+            
+            sender.sendMessage(prefix + message);
+        }
         
         return true;
     }
@@ -156,10 +175,18 @@ public class MOTDCommand implements CommandExecutor, TabCompleter {
             infoMessages.add("§7Yazar: §aKalix");
             infoMessages.add("§7Desteklenen sürümler: §a1.8-1.21");
             infoMessages.add("§7API Sürümü: §a1.13");
+            infoMessages.add("§7Proxy Desteği: §a{proxy}");
+            infoMessages.add("§7Folia Desteği: §a{folia}");
+            infoMessages.add("§7PlaceholderAPI: §a{papi}");
+            infoMessages.add("§7Vault: §a{vault}");
         }
         
         for (String message : infoMessages) {
             message = message.replace("{version}", plugin.getDescription().getVersion());
+            message = message.replace("{proxy}", (plugin.isBungeeCordEnabled() || plugin.isVelocityEnabled()) ? "§aAktif" : "§cPasif");
+            message = message.replace("{folia}", plugin.isFoliaEnabled() ? "§aAktif" : "§cPasif");
+            message = message.replace("{papi}", plugin.isPlaceholderAPIEnabled() ? "§aAktif" : "§cPasif");
+            message = message.replace("{vault}", plugin.isVaultEnabled() ? "§aAktif" : "§cPasif");
             sender.sendMessage(prefix + message);
         }
         

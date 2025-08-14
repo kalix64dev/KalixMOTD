@@ -211,6 +211,40 @@ public class MOTDManager {
     }
     
     /**
+     * Protokol ismini alır
+     */
+    public String getProtocolName() {
+        String protocolName = plugin.getConfigManager().getString("server-list.protocol.name", "§6KalixMOTD §8» §f{version}");
+        return replaceCustomPlaceholders(protocolName);
+    }
+    
+    /**
+     * Protokol versiyonunu alır
+     */
+    public String getProtocolVersion() {
+        if (plugin.getConfigManager().getBoolean("server-list.protocol.custom-version", false)) {
+            return plugin.getConfigManager().getString("server-list.protocol.custom-version-value", "1.21.1");
+        }
+        return plugin.getConfigManager().getString("server-list.protocol.version", "1.8-1.21");
+    }
+    
+    /**
+     * Sunucu türü ismini alır
+     */
+    public String getServerTypeName() {
+        String serverTypeName = plugin.getConfigManager().getString("server-list.server-type.name", "§6KalixMOTD");
+        return replaceCustomPlaceholders(serverTypeName);
+    }
+    
+    /**
+     * Sunucu türü açıklamasını alır
+     */
+    public String getServerTypeDescription() {
+        String serverTypeDescription = plugin.getConfigManager().getString("server-list.server-type.description", "Ultra profesyonel MOTD plugin");
+        return replaceCustomPlaceholders(serverTypeDescription);
+    }
+    
+    /**
      * Sahte oyuncu sayısı kullanılıp kullanılmadığını kontrol eder
      */
     public boolean isFakeOnlineEnabled() {

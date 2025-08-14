@@ -8,3 +8,4 @@
 /workspace/src/main/java/com/kalix/motd/commands/MOTDSetCommand.java
 /workspace/src/main/java/com/kalix/motd/utils/PlaceholderUtils.java
 /workspace/src/main/java/com/kalix/motd/managers/MOTDManager.java
+/workspace/src/main/java/com/kalix/motd/utils/ProxyUtils.java

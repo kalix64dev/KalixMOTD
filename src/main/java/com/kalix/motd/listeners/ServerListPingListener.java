@@ -8,6 +8,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.util.CachedServerIcon;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 import java.io.File;
 import java.util.List;
@@ -41,6 +43,12 @@ public class ServerListPingListener implements Listener {
             if (VersionUtils.isVersionAtLeast("1.16")) {
                 setHoverAndClick(event);
             }
+            
+            // Protokol ayarlarını yap
+            setProtocolSettings(event);
+            
+            // Sunucu türü ayarlarını yap
+            setServerTypeSettings(event);
             
         } catch (Exception e) {
             plugin.getPluginLogger().error("ServerListPing olayında hata: " + e.getMessage());
@@ -193,6 +201,93 @@ public class ServerListPingListener implements Listener {
         
         if (plugin.getConfigManager().isDebugEnabled()) {
             plugin.getPluginLogger().debug("Sunucu açıklaması ayarlandı: " + description);
+        }
+    }
+    
+    /**
+     * Protokol ayarlarını yapar
+     */
+    private void setProtocolSettings(ServerListPingEvent event) {
+        if (!plugin.getConfigManager().getBoolean("server-list.protocol.enabled", true)) {
+            return;
+        }
+        
+        try {
+            // Reflection kullanarak protokol ayarlarını yap
+            Class<?> eventClass = event.getClass();
+            
+            // Protokol versiyonunu ayarla
+            if (plugin.getConfigManager().getBoolean("advanced.protocol.custom-protocol", false)) {
+                int protocolNumber = plugin.getConfigManager().getInt("advanced.protocol.custom-protocol-number", 47);
+                
+                // setProtocolVersion metodu varsa kullan
+                try {
+                    Method setProtocolMethod = eventClass.getMethod("setProtocolVersion", int.class);
+                    setProtocolMethod.invoke(event, protocolNumber);
+                } catch (NoSuchMethodException e) {
+                    // Field ile ayarla
+                    try {
+                        Field protocolField = eventClass.getDeclaredField("protocolVersion");
+                        protocolField.setAccessible(true);
+                        protocolField.set(event, protocolNumber);
+                    } catch (Exception ex) {
+                        if (plugin.getConfigManager().isDebugEnabled()) {
+                            plugin.getPluginLogger().debug("Protokol versiyonu ayarlanamadı: " + ex.getMessage());
+                        }
+                    }
+                }
+            }
+            
+            if (plugin.getConfigManager().isDebugEnabled()) {
+                plugin.getPluginLogger().debug("Protokol ayarları yapıldı");
+            }
+        } catch (Exception e) {
+            if (plugin.getConfigManager().isDebugEnabled()) {
+                plugin.getPluginLogger().debug("Protokol ayarları yapılırken hata: " + e.getMessage());
+            }
+        }
+    }
+    
+    /**
+     * Sunucu türü ayarlarını yapar
+     */
+    private void setServerTypeSettings(ServerListPingEvent event) {
+        if (!plugin.getConfigManager().getBoolean("server-list.server-type.enabled", true)) {
+            return;
+        }
+        
+        try {
+            // Reflection kullanarak sunucu türü ayarlarını yap
+            Class<?> eventClass = event.getClass();
+            
+            // setServerDescription metodu varsa kullan (1.16+)
+            if (VersionUtils.isVersionAtLeast("1.16")) {
+                try {
+                    Method setDescriptionMethod = eventClass.getMethod("setServerDescription", String.class);
+                    String description = plugin.getMOTDManager().getServerTypeDescription();
+                    setDescriptionMethod.invoke(event, description);
+                } catch (NoSuchMethodException e) {
+                    // Fallback - field ile ayarla
+                    try {
+                        Field descriptionField = eventClass.getDeclaredField("description");
+                        descriptionField.setAccessible(true);
+                        String description = plugin.getMOTDManager().getServerTypeDescription();
+                        descriptionField.set(event, description);
+                    } catch (Exception ex) {
+                        if (plugin.getConfigManager().isDebugEnabled()) {
+                            plugin.getPluginLogger().debug("Sunucu türü açıklaması ayarlanamadı: " + ex.getMessage());
+                        }
+                    }
+                }
+            }
+            
+            if (plugin.getConfigManager().isDebugEnabled()) {
+                plugin.getPluginLogger().debug("Sunucu türü ayarları yapıldı");
+            }
+        } catch (Exception e) {
+            if (plugin.getConfigManager().isDebugEnabled()) {
+                plugin.getPluginLogger().debug("Sunucu türü ayarları yapılırken hata: " + e.getMessage());
+            }
         }
     }
 }
