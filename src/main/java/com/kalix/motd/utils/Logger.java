@@ -30,6 +30,7 @@ public class Logger {
         this.dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         
         // ConfigManager henüz hazır olmayabilir, setupFileLogger'ı daha sonra çağır
+        // setupFileLogger() çağrısı kaldırıldı
     }
     
     /**
